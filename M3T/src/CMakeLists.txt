@@ -77,6 +77,14 @@ if (USE_REALSENSE)
     list(APPEND SOURCES realsense_camera.cpp)
     list(APPEND HEADERS ../include/m3t/realsense_camera.h)
 endif ()
+if (USE_WEBSOCKET)
+    list(APPEND SOURCES web_socket_color_camera.cpp)
+    list(APPEND HEADERS ../include/m3t/web_socket_color_camera.h)
+    list(APPEND SOURCES websocket.cpp)
+    list(APPEND HEADERS ../include/m3t/websocket.h)
+    list(APPEND SOURCES websocket_publisher.cpp)
+    list(APPEND HEADERS ../include/m3t/websocket_publisher.h)
+endif ()
 
 
 # Define libraries
@@ -92,10 +100,10 @@ if (USE_REALSENSE)
     list(APPEND LIBRARIES ${realsense2_LIBRARY})
 endif ()
 
-
 # Define target
 # =============================================================================
 add_library(m3t STATIC ${SOURCES} ${HEADERS})
+
 target_link_libraries(m3t PUBLIC ${LIBRARIES})
 target_include_directories(m3t PUBLIC  
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>

@@ -10,6 +10,7 @@ project(M3T)
 option(USE_AZURE_KINECT "Use Azure Kinect" ON)
 option(USE_REALSENSE "Use RealSense D435" ON)
 option(USE_GTEST "Use gtest" ON)
+option(USE_WEBSOCKET "Use WebSocket++ for messaging" ON)
 
 
 # Libraries
@@ -42,6 +43,21 @@ endif ()
 if (USE_REALSENSE)
     find_package(realsense2 REQUIRED)
 endif ()
+
+if(USE_WEBSOCKET)
+    # Path to WebSocket++ headers
+    set(WEBSOCKETPP_INCLUDE_DIR "$ENV{HOME}/websocketpp")
+
+    if(NOT EXISTS "${WEBSOCKETPP_INCLUDE_DIR}/websocketpp/config/asio_no_tls.hpp")
+        message(FATAL_ERROR "WebSocket++ headers not found in ${WEBSOCKETPP_INCLUDE_DIR}")
+    endif()
+
+    # Add include directory for the compiler
+    include_directories("${WEBSOCKETPP_INCLUDE_DIR}")
+
+    # Add compile definition for ASIO standalone
+    add_definitions(-DASIO_STANDALONE)
+endif()
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -128,6 +144,9 @@ endif ()
 if (USE_GTEST)
     add_definitions( -DUSE_GTEST=TRUE )
 endif ()
+if (USE_WEBSOCKET)
+    add_definitions( -DUSE_WEBSOCKET=TRUE )
+endif()
 
 
 # Directories
